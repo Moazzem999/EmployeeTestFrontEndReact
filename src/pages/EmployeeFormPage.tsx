@@ -54,8 +54,13 @@ const EmployeeFormPage = () => {
   }, [employee, reset]);
 
   const mutation = useMutation({
-    mutationFn: (data: EmployeeFormData) => 
-      isEdit ? employeeService.update(Number(id), data) : employeeService.create(data),
+    mutationFn: async (data: EmployeeFormData) => {
+      if (isEdit) {
+        return await employeeService.update(Number(id), data);
+      } else {
+        return await employeeService.create(data);
+      }
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['employees'] });
       navigate('/employees');
